@@ -337,7 +337,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
     <div class="ct">
       <!-- PLANNING --><div class="plan-w" id="v-plan">
         <div class="plan-header">
-          <div class="sh"><div class="sh-t">💡 記事アイデア<span class="sh-h">各自アイデアを追加 → チェックで採用 → 記事管理に移行</span></div></div>
+          <div class="sh"><div class="sh-t">💡 記事アイデア<span class="sh-h">各自アイデアを追加 → チェックで採用 → 記事管理に移行</span></div><button class="btn btn-sm" onclick="sortIdeas()">並べ替え</button></div>
                   </div>
         <div class="plan-add">
           <input class="plan-input" id="plan-idea-input" placeholder="記事のアイデアを入力…">
@@ -1228,6 +1228,16 @@ function addIdea(){
   }).catch(e=>{_planSaving=false;showError()});
 }
 
+function sortIdeas(){
+  ideas.sort(function(a,b){
+    if(a.adopted!==b.adopted)return a.adopted?1:-1;
+    var o={hot:0,warm:1,cold:2};
+    return(o[a.priority||'cold']||2)-(o[b.priority||'cold']||2);
+  });
+  renderPlanning();
+  toast('確定 → 候補 → 未定 の順に並べ替えました');
+}
+
 function cyclePriority(id){
   var idea=ideas.find(function(x){return x.id===id});if(!idea)return;
   var levels=['cold','warm','hot'];
@@ -1313,7 +1323,7 @@ function renderPlanning(){
   });
   // month tabs removed
 
-  var unadopted=ideas.filter(function(i){return !i.adopted}).sort(function(a,b){var o={hot:0,warm:1,cold:2};return(o[a.priority||'cold']||2)-(o[b.priority||'cold']||2)});
+  var unadopted=ideas.filter(function(i){return !i.adopted});
   var listEl=document.getElementById('plan-list');
   if(!unadopted.length){
     listEl.innerHTML='<div class="plan-empty">\u307e\u3060\u30a2\u30a4\u30c7\u30a2\u304c\u3042\u308a\u307e\u305b\u3093\u3002\u4e0a\u306e\u30d5\u30a9\u30fc\u30e0\u304b\u3089\u8ffd\u52a0\u3057\u3066\u304f\u3060\u3055\u3044\u3002</div>';
