@@ -239,6 +239,17 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 /* Scrollbar */
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}::-webkit-scrollbar-thumb:hover{background:var(--muted)}
 
+/* ═══ PHOTO KANBAN ═══ */
+.pkb-w{display:none}.pkb-w.on{display:block}
+.pkb-person{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px;overflow:hidden}
+.pkb-name{font-size:16px;font-weight:700;font-family:var(--font-display);margin-bottom:12px;letter-spacing:-.3px}
+.pkb-stats{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.pkb-stat{font-size:11px;padding:4px 12px;border-radius:20px;font-weight:600;font-family:var(--font-display)}
+.pkb-cols{display:flex;flex-direction:column;gap:6px}
+.pkb-card{padding:10px 14px;border:1px solid var(--border);border-radius:var(--rs);font-size:12px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pkb-card:hover{box-shadow:var(--sh);border-color:var(--border-l)}
+.pkb-card-ti{font-weight:500;flex:1}.pkb-card-date{font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+
 /* ═══ PLANNING ═══ */
 .plan-w{display:none;padding:0}.plan-w.on{display:block}
 .plan-header{margin-bottom:16px}
@@ -309,7 +320,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
       <div class="nv-l">メイン</div>
       <div class="ni" onclick="swV('plan',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>企画会議</div>
       <div class="ni on" onclick="swV('dash',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>ダッシュボード</div>
-      <div class="ni" onclick="swV('kb',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="15" rx="1"/></svg>カンバン</div>
+      <div class="ni" onclick="swV('kb',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="15" rx="1"/></svg>執筆カンバン</div>
+      <div class="ni" onclick="swV('pkb',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 00-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 00-8-8z"/></svg>撮影カンバン</div>
       <div class="ni" onclick="swV('an',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>データ分析</div>
       <div class="ni" onclick="swV('gantt',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="7" y="12" width="14" height="4" rx="1"/><rect x="5" y="20" width="10" height="0" rx="1"/><line x1="3" y1="12" x2="17" y2="12"/><line x1="3" y1="20" x2="13" y2="20"/></svg>年間スケジュール</div>
       <div class="ni" onclick="swV('notes',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>メモ</div>
@@ -359,6 +371,12 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
         <div class="sched-pool-header"><div class="sh-t">📦 未配置の記事<span class="sh-h">上の枠にドラッグして配置</span></div><div style="display:flex;gap:6px;align-items:center"><input type="date" id="irr-date-input" class="fi" style="width:150px;padding:5px 8px;font-size:12px"><button class="btn btn-sm" onclick="addIrregularSlot()">＋ 枠を追加</button></div></div>
         <div class="sched-pool" id="sched-pool"></div>
       </div>
+      <!-- PHOTO KANBAN --><div class="pkb-w" id="v-pkb">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="pkb-person"><div class="pkb-name">📷 Geoff</div><div class="pkb-stats" id="pkb-geoff-stats"></div><div class="pkb-cols" id="pkb-geoff"></div></div>
+          <div class="pkb-person"><div class="pkb-name">📷 Boris</div><div class="pkb-stats" id="pkb-boris-stats"></div><div class="pkb-cols" id="pkb-boris"></div></div>
+        </div>
+      </div>
       <!-- KANBAN --><div class="kb-w" id="v-kb"><div class="kb-c"><div class="kb-ch" style="border-top:2px solid #9CA3AF"><span>📋 未着手</span><span class="kb-cc" id="kbc-n">0</span></div><div class="kb-cb" id="kbb-n"></div></div><div class="kb-c"><div class="kb-ch" style="border-top:2px solid var(--blue)"><span>✍️ 執筆中</span><span class="kb-cc" id="kbc-w">0</span></div><div class="kb-cb" id="kbb-w"></div></div><div class="kb-c"><div class="kb-ch" style="border-top:2px solid var(--yellow)"><span>👀 確認待ち</span><span class="kb-cc" id="kbc-r">0</span></div><div class="kb-cb" id="kbb-r"></div></div><div class="kb-c"><div class="kb-ch" style="border-top:2px solid var(--purple)"><span>📅 公開待ち</span><span class="kb-cc" id="kbc-wt">0</span></div><div class="kb-cb" id="kbb-wt"></div></div><div class="kb-c"><div class="kb-ch" style="border-top:2px solid var(--green)"><span>🚀 公開済み</span><span class="kb-cc" id="kbc-p">0</span></div><div class="kb-cb" id="kbb-p"></div></div></div>
       <!-- ANALYTICS --><div class="an-w" id="v-an"><div class="mt" id="month-tabs"></div><div id="an-ms"></div><div class="sh"><div class="sh-t">📊 記事パフォーマンス<span class="sh-h">数値クリックで直接入力</span></div><button class="btn btn-sm" onclick="syncNewAnalytics()">📥 未登録の記事をスプシに追加</button></div><div class="at-w"><table class="at"><thead><tr><th>掲載日</th><th>記事タイトル</th><th style="text-align:right">セッション<br><span style="font-weight:400;opacity:.6">〜1週</span></th><th style="text-align:right">セッション<br><span style="font-weight:400;opacity:.6">〜1月</span></th><th style="text-align:right">エンゲージ<br><span style="font-weight:400;opacity:.6">〜1週</span></th><th style="text-align:right">エンゲージ<br><span style="font-weight:400;opacity:.6">〜1月</span></th><th style="text-align:right">回遊率<br><span style="font-weight:400;opacity:.6">〜1週</span></th><th style="text-align:right">回遊率<br><span style="font-weight:400;opacity:.6">〜1月</span></th></tr></thead><tbody id="a-tb"></tbody></table></div></div>
       <!-- GANTT -->
@@ -385,8 +403,15 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
   <div class="md"><button class="md-x" onclick="closeMo()">✕</button><div class="md-t" id="mo-t">記事を追加</div><input type="hidden" id="f-id">
     <div class="fg"><label class="fl">記事タイトル</label><input class="fi" id="f-ti" placeholder="タイトル"></div>
     <div class="fr"><div class="fg"><label class="fl">公開日</label><input class="fi" id="f-pd" type="date" onchange="autoN()"></div><div class="fg"><label class="fl">通知日</label><input class="fi" id="f-nd" type="date"><div class="fh">公開日の翌日を自動セット</div></div></div>
+    <div class="mo-section" style="border-left:3px solid var(--blue);padding-left:14px;margin-bottom:20px"><div class="mo-section-label" style="font-size:9px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:var(--font-display)">✍ 執筆</div>
     <div class="fr"><div class="fg"><label class="fl">担当者</label><select class="fi" id="f-as"><option value="">未定</option><option>Jacky</option><option>poh</option><option>Cumin</option><option>Cyan</option><option>Azz</option></select></div><div class="fg"><label class="fl">状態</label><select class="fi" id="f-st"><option>未着手</option><option>執筆中</option><option>確認待ち</option><option>公開待ち</option><option>公開済み</option></select></div></div>
+    </div>
+    <div class="mo-section" style="border-left:3px solid var(--orange);padding-left:14px;margin-bottom:20px"><div class="mo-section-label" style="font-size:9px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:var(--font-display)">📷 撮影</div>
+    <div class="fr"><div class="fg"><label class="fl">撮影担当</label><div style="display:flex;gap:16px;padding:4px 0"><label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="f-photo-geoff" style="accent-color:var(--green)"> Geoff</label><label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="f-photo-boris" style="accent-color:var(--green)"> Boris</label></div></div><div class="fg"><label class="fl">撮影ステータス</label><select class="fi" id="f-photo-st"><option value="">未撮影</option><option>撮影済</option><option>納品済</option></select></div></div>
+    <div class="fr"><div class="fg"><label class="fl">撮影予定日</label><input class="fi" type="date" id="f-photo-date"></div><div class="fg"><label class="fl">納品予定日</label><input class="fi" type="date" id="f-delivery-date"></div></div>
+    </div>
     <div class="fg"><label class="fl">メモ</label><textarea class="fi" id="f-me" rows="3" placeholder="撮影日、参考情報など"></textarea></div>
+    <div class="mo-section" style="border-left:3px solid var(--purple);padding-left:14px;margin-bottom:20px"><div class="mo-section-label" style="font-size:9px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-family:var(--font-display)">📄 構成</div>
     <div class="fg"><label class="fl">タイトル案</label><input class="fi" id="f-draft-ti" placeholder="公開用タイトル案"></div>
     <div class="fg"><label class="fl">構成案</label><textarea class="fi" id="f-outline" rows="5" placeholder="見出し・構成のメモ&#10;例：&#10;1. リード（○○の魅力）&#10;2. 商品紹介3点&#10;3. スタッフコメント&#10;4. まとめ"></textarea></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px"><div id="mo-del"></div><div style="display:flex;gap:8px"><button class="btn" onclick="closeMo()">キャンセル</button><button class="btn btn-p" id="mo-sv" onclick="saveA()">保存</button></div></div>
@@ -494,7 +519,7 @@ async function loadAll(){
     s=s.replace(/^(\d{4})-(\d)-/,'$1-0$2-').replace(/-(\d)$/,'-0$1');
     return s;
   }
-  articles=(data.articles||[]).map(a=>({...a,pd:normDate(a.pd),nd:normDate(a.nd),draftTi:a.draftTi||'',outline:a.outline||''}));
+  articles=(data.articles||[]).map(a=>({...a,pd:normDate(a.pd),nd:normDate(a.nd),photo:a.photo||'',photoSt:a.photoSt||'',photoDate:normDate(a.photoDate||''),deliveryDate:normDate(a.deliveryDate||''),draftTi:a.draftTi||'',outline:a.outline||''}));
 
   // Ideas
   ideas=(data.ideas||[]).map(i=>({id:i.id,ti:i.ti||'',cat:i.cat||'',who:i.who||'',votes:i.votes||0,adopted:!!i.adopted,month:i.month||'',date:i.date||'',assignee:i.assignee||'',sortOrder:i.sortOrder||0,priority:i.priority||'cold'}));
@@ -718,7 +743,7 @@ function removeIrregularSlot(ds){
     var nd=parseLocalDate(a.pd);nd.setDate(nd.getDate()+1);
     a.nd=toLocalDateStr(nd);
     showSaving();
-    api('saveArticle',{id:a.id,pd:a.pd,nd:a.nd,ti:a.ti,as:a.as,st:a.st,me:a.me,draftTi:a.draftTi||'',outline:a.outline||''}).then(showSaved).catch(showError);
+    api('saveArticle',{id:a.id,pd:a.pd,nd:a.nd,ti:a.ti,as:a.as,st:a.st,me:a.me,photo:a.photo||'',photoSt:a.photoSt||'',photoDate:normDate(a.photoDate||''),deliveryDate:normDate(a.deliveryDate||''),draftTi:a.draftTi||'',outline:a.outline||''}).then(showSaved).catch(showError);
   }
   renderSched();
   toast(ds+' の枠を削除しました');
@@ -778,7 +803,7 @@ function onSlotDrop(e,slotDate){
   renderSched();
   toast(fDF(slotDate)+' に配置しました');
   showSaving();
-  api('saveArticle',{id:a.id,pd:a.pd,nd:a.nd,ti:a.ti,as:a.as,st:a.st,me:a.me,draftTi:a.draftTi||'',outline:a.outline||''}).then(showSaved).catch(showError);
+  api('saveArticle',{id:a.id,pd:a.pd,nd:a.nd,ti:a.ti,as:a.as,st:a.st,me:a.me,photo:a.photo||'',photoSt:a.photoSt||'',photoDate:normDate(a.photoDate||''),deliveryDate:normDate(a.deliveryDate||''),draftTi:a.draftTi||'',outline:a.outline||''}).then(showSaved).catch(showError);
 }
 
 function removeFromSlot(id){
@@ -791,7 +816,7 @@ function removeFromSlot(id){
   renderSched();
   toast('枠から外しました');
   showSaving();
-  api('saveArticle',{id:a.id,pd:a.pd,nd:a.nd,ti:a.ti,as:a.as,st:a.st,me:a.me,draftTi:a.draftTi||'',outline:a.outline||''}).then(showSaved).catch(showError);
+  api('saveArticle',{id:a.id,pd:a.pd,nd:a.nd,ti:a.ti,as:a.as,st:a.st,me:a.me,photo:a.photo||'',photoSt:a.photoSt||'',photoDate:normDate(a.photoDate||''),deliveryDate:normDate(a.deliveryDate||''),draftTi:a.draftTi||'',outline:a.outline||''}).then(showSaved).catch(showError);
 }
 
 var DOW_NAMES=['日','月','火','水','木','金','土'];
@@ -917,7 +942,7 @@ function renderSchedCard(a,inSlot){
     asO+='<div class="dd-opt '+(a.as===o.n?'active':'')+'" onclick="setAssignee('+a.id+',\''+o.n+'\',event)">'+(o.n?'<div class="av '+avC(o.n)+'" style="width:16px;height:16px;font-size:8px">'+o.n[0]+'</div>':'')+' '+o.l+'</div>';
   });
   var h='<div class="sched-card" draggable="true" ondragstart="onSchedDragStart(event,'+a.id+')" ondragend="onSchedDragEnd(event)">';
-  h+='<div class="sc-ti" onclick="openEdit('+a.id+')">'+a.ti+'</div>';
+  h+='<div class="sc-ti" onclick="openEdit('+a.id+')">'+a.ti+(a.photo?' <span style="font-size:9px;color:var(--muted);font-weight:400">📷 '+a.photo+(a.photoSt?' <span style="font-size:8px;padding:1px 5px;border-radius:3px;background:'+(a.photoSt==='納品済'?'var(--green-l);color:var(--green-d)':'var(--yellow-l);color:var(--yellow)')+'">'+ a.photoSt+'</span>':'')+'</span>':'')+'</div>';
   h+='<div class="dd-wrap" onclick="toggleDD(this,event)"><div class="dd-trigger" style="display:flex;align-items:center;gap:4px;font-size:11px">'+(a.as?'<div class="av '+avC(a.as)+'" style="width:16px;height:16px;font-size:8px">'+a.as[0]+'</div>'+a.as:'<span style="color:var(--muted)">担当 ▾</span>')+'</div><div class="dd-menu">'+asO+'</div></div>';
   h+='<div class="dd-wrap" onclick="toggleDD(this,event)"><div class="dd-trigger"><span class="sb-badge '+stC(a.st)+'">'+stI(a.st)+' '+a.st+' ▾</span></div><div class="dd-menu right">'+stO+'</div></div>';
   if(inSlot) h+='<div class="sc-remove" onclick="removeFromSlot('+a.id+')">✕</div>';
@@ -1151,20 +1176,67 @@ function updateKPIs(){
   }else{document.getElementById('k-nav').textContent='—';setBar('k-nav-bar',0,'')}
 }
 
-function renderAll(){renderSched();renderKb();renderAnalytics();renderGantt();renderNotes();updateKPIs()}
+function renderPhotoKb(){
+  ['Geoff','Boris'].forEach(function(name){
+    var mine=articles.filter(function(a){return(a.photo||'').includes(name)});
+    var byStatus={};
+    mine.forEach(function(a){if(!byStatus[a.st])byStatus[a.st]=[];byStatus[a.st].push(a)});
+    var total=mine.length;
+    var delivered=mine.filter(function(a){return a.photoSt==='納品済'}).length;
+    var shot=mine.filter(function(a){return a.photoSt==='撮影済'}).length;
+    var unshot=total-delivered-shot;
+    var statsEl=document.getElementById('pkb-'+name.toLowerCase()+'-stats');
+    statsEl.innerHTML='<div class="pkb-stat" style="background:var(--raised);color:var(--text)">合計 '+total+'</div>'
+      +'<div class="pkb-stat" style="background:var(--raised);color:var(--muted)">未撮影 '+unshot+'</div>'
+      +'<div class="pkb-stat" style="background:var(--yellow-l);color:var(--yellow)">撮影済 '+shot+'</div>'
+      +'<div class="pkb-stat" style="background:var(--green-l);color:var(--green-d)">納品済 '+delivered+'</div>';
+    var colEl=document.getElementById('pkb-'+name.toLowerCase());
+    if(!mine.length){colEl.innerHTML='<div style="color:var(--muted);font-size:12px;padding:12px">担当案件なし</div>';return}
+    var statusOrder=['未着手','執筆中','確認待ち','公開待ち','公開済み'];
+    var h='';
+    var photoStatuses=['','撮影済','納品済'];
+    var photoLabels={'':'未撮影','撮影済':'撮影済','納品済':'納品済'};
+    var photoColors={'':'var(--raised);color:var(--muted)','撮影済':'var(--yellow-l);color:var(--yellow)','納品済':'var(--green-l);color:var(--green-d)'};
+    var byPhotoSt={};
+    mine.forEach(function(a){var ps=a.photoSt||'';if(!byPhotoSt[ps])byPhotoSt[ps]=[];byPhotoSt[ps].push(a)});
+    photoStatuses.forEach(function(ps){
+      var items=byPhotoSt[ps]||[];
+      if(!items.length)return;
+      var label=photoLabels[ps];
+      h+='<div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;padding:8px 0 4px;font-family:var(--font-display)">'+(ps===''?'📷':'✅')+' '+label+' ('+items.length+')</div>';
+      items.forEach(function(a){
+        h+='<div class="pkb-card" onclick="openEdit('+a.id+')" style="flex-direction:column;align-items:stretch">';
+        h+='<div style="display:flex;align-items:center;justify-content:space-between;gap:8px">';
+        h+='<div class="pkb-card-ti">'+a.ti+'</div>';
+        h+='<span class="sb-badge" style="font-size:9px;background:'+photoColors[a.photoSt||'']+'">'+photoLabels[a.photoSt||'']+'</span>';
+        h+='</div>';
+        h+='<div style="display:flex;gap:12px;margin-top:6px;font-size:10px">';
+        h+='<span style="color:var(--text2)">'+'\ud83d\udcf7 '+(a.photoDate?fD(a.photoDate):'—')+'</span>';
+        h+='<span style="color:var(--text2)">'+'\ud83d\udce6 '+(a.deliveryDate?fD(a.deliveryDate):'—')+'</span>';
+        h+='<span style="color:var(--muted)">\u516c\u958b '+fD(a.pd)+'</span>';
+        h+='<span class="sb-badge '+stC(a.st)+'" style="font-size:8px;padding:2px 6px">'+a.st+'</span>';
+        h+='</div>';
+        h+='</div>';
+      });
+    });
+    colEl.innerHTML=h;
+  });
+}
+
+function renderAll(){renderSched();renderKb();renderPhotoKb();renderAnalytics();renderGantt();renderNotes();updateKPIs()}
 
 // ═══ NAV ═══
-function swV(v,el){['plan','dash','kb','an','gantt','notes'].forEach(k=>{const e=document.getElementById('v-'+k);if(k==='kb')e.className=v===k?'kb-w on':'kb-w';else if(k==='an')e.className=v===k?'an-w on':'an-w';else if(k==='gantt')e.className=v===k?'gantt-w on':'gantt-w';else if(k==='notes')e.className=v===k?'notes-w on':'notes-w';else if(k==='plan')e.className=v===k?'plan-w on':'plan-w';else e.style.display=v===k?'block':'none'});document.getElementById('vt').textContent={plan:'企画会議',dash:'ダッシュボード',kb:'カンバン',an:'データ分析',gantt:'年間スケジュール',notes:'メモ'}[v];document.querySelectorAll('#nv-m .ni').forEach(n=>n.classList.remove('on'));if(el)el.classList.add('on');if(v==='plan')renderPlanning()}
+function swV(v,el){['plan','dash','kb','pkb','an','gantt','notes'].forEach(k=>{const e=document.getElementById('v-'+k);if(k==='kb')e.className=v===k?'kb-w on':'kb-w';else if(k==='pkb')e.className=v===k?'pkb-w on':'pkb-w';else if(k==='an')e.className=v===k?'an-w on':'an-w';else if(k==='gantt')e.className=v===k?'gantt-w on':'gantt-w';else if(k==='notes')e.className=v===k?'notes-w on':'notes-w';else if(k==='plan')e.className=v===k?'plan-w on':'plan-w';else e.style.display=v===k?'block':'none'});document.getElementById('vt').textContent={plan:'企画会議',dash:'ダッシュボード',kb:'執筆カンバン',pkb:'撮影カンバン',an:'データ分析',gantt:'年間スケジュール',notes:'メモ'}[v];document.querySelectorAll('#nv-m .ni').forEach(n=>n.classList.remove('on'));if(el)el.classList.add('on');if(v==='plan')renderPlanning()}
 function fA(n,el){cFilter=n;renderSched();renderKb();document.querySelectorAll('#nv-f .ni').forEach(x=>x.classList.remove('on'));if(el)el.classList.add('on')}
 
 // Article modal
 function openMo(){document.getElementById('mo').classList.add('on')}
 function closeMo(){document.getElementById('mo').classList.remove('on')}
 function autoN(){const p=document.getElementById('f-pd').value;if(p){const d=parseLocalDate(p);d.setDate(d.getDate()+1);document.getElementById('f-nd').value=toLocalDateStr(d)}}
-function resetF(){['f-id','f-ti','f-pd','f-nd','f-me','f-draft-ti','f-outline'].forEach(i=>document.getElementById(i).value='');document.getElementById('f-as').value='';document.getElementById('f-st').value='未着手';document.getElementById('mo-del').innerHTML=''}
+function resetF(){['f-id','f-ti','f-pd','f-nd','f-me','f-draft-ti','f-outline'].forEach(i=>document.getElementById(i).value='');document.getElementById('f-as').value='';document.getElementById('f-st').value='未着手';document.getElementById('f-photo-geoff').checked=false;document.getElementById('f-photo-boris').checked=false;document.getElementById('f-photo-st').value='';document.getElementById('f-photo-date').value='';document.getElementById('f-delivery-date').value='';document.getElementById('mo-del').innerHTML=''}
 function openAdd(){resetF();document.getElementById('mo-t').textContent='記事を追加';document.getElementById('mo-sv').textContent='追加する';openMo()}
-function openEdit(id){const a=articles.find(x=>x.id===id);if(!a)return;resetF();document.getElementById('mo-t').textContent='記事を編集';document.getElementById('mo-sv').textContent='保存する';document.getElementById('f-id').value=a.id;document.getElementById('f-ti').value=a.ti;a._prevTi=a.ti;document.getElementById('f-pd').value=a.pd;document.getElementById('f-nd').value=a.nd;document.getElementById('f-as').value=a.as;document.getElementById('f-st').value=a.st;document.getElementById('f-me').value=a.me;document.getElementById('f-draft-ti').value=a.draftTi||'';document.getElementById('f-outline').value=a.outline||'';document.getElementById('mo-del').innerHTML=`<button class="btn" style="color:var(--red);border-color:var(--red)" onclick="delA(${a.id})">削除</button>`;openMo()}
-function saveA(){const id=document.getElementById('f-id').value,ti=document.getElementById('f-ti').value.trim(),pd=document.getElementById('f-pd').value,nd=document.getElementById('f-nd').value,as=document.getElementById('f-as').value,st=document.getElementById('f-st').value,me=document.getElementById('f-me').value.trim(),draftTi=document.getElementById('f-draft-ti').value.trim(),outline=document.getElementById('f-outline').value.trim();if(!ti||!pd){toast('タイトルと公開日は必須');return}showSaving();if(id){const a=articles.find(x=>x.id===Number(id));if(a){const w=a.st;a.ti=ti;a.pd=pd;a.nd=nd||pd;a.as=as;a.st=st;a.me=me;a.draftTi=draftTi;a.outline=outline;
+function openEdit(id){const a=articles.find(x=>x.id===id);if(!a)return;resetF();document.getElementById('mo-t').textContent='記事を編集';document.getElementById('mo-sv').textContent='保存する';document.getElementById('f-id').value=a.id;document.getElementById('f-ti').value=a.ti;a._prevTi=a.ti;document.getElementById('f-pd').value=a.pd;document.getElementById('f-nd').value=a.nd;document.getElementById('f-as').value=a.as;document.getElementById('f-st').value=a.st;document.getElementById('f-me').value=a.me;document.getElementById('f-photo-geoff').checked=(a.photo||'').includes('Geoff');document.getElementById('f-photo-boris').checked=(a.photo||'').includes('Boris');document.getElementById('f-photo-st').value=a.photoSt||'';document.getElementById('f-photo-date').value=a.photoDate||'';document.getElementById('f-delivery-date').value=a.deliveryDate||'';document.getElementById('f-draft-ti').value=a.draftTi||'';document.getElementById('f-outline').value=a.outline||'';document.getElementById('mo-del').innerHTML=`<button class="btn" style="color:var(--red);border-color:var(--red)" onclick="delA(${a.id})">削除</button>`;openMo()}
+function saveA(){const id=document.getElementById('f-id').value,ti=document.getElementById('f-ti').value.trim(),pd=document.getElementById('f-pd').value,nd=document.getElementById('f-nd').value,as=document.getElementById('f-as').value,st=document.getElementById('f-st').value,me=document.getElementById('f-me').value.trim(),photo=[document.getElementById('f-photo-geoff').checked?'Geoff':'',document.getElementById('f-photo-boris').checked?'Boris':''].filter(Boolean).join(','),photoSt=document.getElementById('f-photo-st').value,photoDate=document.getElementById('f-photo-date').value,deliveryDate=document.getElementById('f-delivery-date').value,draftTi=document.getElementById('f-draft-ti').value.trim(),outline=document.getElementById('f-outline').value.trim();if(!ti||!pd){toast('タイトルと公開日は必須');return}showSaving();if(id){const a=articles.find(x=>x.id===Number(id));if(a){const w=a.st;a.ti=ti;a.pd=pd;a.nd=nd||pd;a.as=as;a.st=st;a.me=me;a.photo=photo;a.photoSt=photoSt;a.photoDate=photoDate;a.deliveryDate=deliveryDate;a.draftTi=draftTi;a.outline=outline;
     // Sync title to analytics data
     var oldTi=a._prevTi||'';
     Object.keys(monthlyData).forEach(function(mk){monthlyData[mk].articles.forEach(function(ad){
@@ -1175,7 +1247,7 @@ function saveA(){const id=document.getElementById('f-id').value,ti=document.getE
         }
       }
     })});
-    closeMo();renderAll();if(w!=='公開済み'&&st==='公開済み')toast(`→ 公開済み → データ分析に追加`);else toast(`更新しました`);api('saveArticle',{id:Number(id),pd,nd:nd||pd,ti,as,st,me,draftTi,outline}).then(r=>{
+    closeMo();renderAll();if(w!=='公開済み'&&st==='公開済み')toast(`→ 公開済み → データ分析に追加`);else toast(`更新しました`);api('saveArticle',{id:Number(id),pd,nd:nd||pd,ti,as,st,me,photo,photoSt,photoDate,deliveryDate,draftTi,outline}).then(r=>{
   if(w!=='公開済み'&&st==='公開済み'){
     const d=new Date(pd);const mk=monthKey(pd);const dt=`${d.getMonth()+1}/${d.getDate()}`;
     api('addAnalyticsRow',{month:mk,date:dt,title:ti}).then(r2=>{
@@ -1189,7 +1261,7 @@ function saveA(){const id=document.getElementById('f-id').value,ti=document.getE
       showSaved();
     }).catch(showError);
   }else{showSaved()}
-}).catch(showError)}}else{api('saveArticle',{pd,nd:nd||pd,ti,as,st,me,draftTi,outline}).then(r=>{if(r&&r.id){articles.push({id:r.id,pd,nd:nd||pd,ti,as,st,me,draftTi,outline});closeMo();renderAll();toast(`「${ti}」を追加`);
+}).catch(showError)}}else{api('saveArticle',{pd,nd:nd||pd,ti,as,st,me,photo,photoSt:'',photoDate:'',deliveryDate:'',draftTi,outline}).then(r=>{if(r&&r.id){articles.push({id:r.id,pd,nd:nd||pd,ti,as,st,me,photo,photoSt:'',photoDate:'',deliveryDate:'',draftTi,outline});closeMo();renderAll();toast(`「${ti}」を追加`);
   if(st==='公開済み'){
     const d=new Date(pd);const mk=monthKey(pd);const dt=`${d.getMonth()+1}/${d.getDate()}`;
     api('addAnalyticsRow',{month:mk,date:dt,title:ti}).then(r2=>{
