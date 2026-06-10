@@ -146,6 +146,17 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 .an-nb{display:inline-block;background:var(--text);color:#fff;font-size:8px;padding:2px 6px;border-radius:3px;margin-left:6px;font-weight:600;font-family:var(--font-display);letter-spacing:.5px;text-transform:uppercase}
 .ec{cursor:pointer;border-radius:4px;padding:2px 4px;margin:-2px -4px;transition:.1s}.ec:hover{background:var(--raised)}
 .ec-input{width:70px;padding:3px 6px;border:1px solid var(--text);border-radius:4px;font-size:12px;font-family:var(--font-mono);background:var(--white);color:var(--text);text-align:right;outline:none}
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chart-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.chart-title{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;font-family:var(--font-display)}
+.chart-svg{width:100%;overflow:visible}
+.chart-line{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chart-dot{stroke-width:2;stroke:var(--white);cursor:pointer;transition:all .15s}
+.chart-dot:hover{r:5.5}
+.chart-label{font-size:9px;fill:var(--muted);font-family:var(--font-mono);text-anchor:middle}
+.chart-val{font-size:8px;fill:var(--text);font-family:var(--font-mono);font-weight:600;text-anchor:middle}
+.chart-grid-line{stroke:var(--border);stroke-width:1;stroke-dasharray:3,3}
+.chart-target-line{stroke:var(--green);stroke-width:1;stroke-dasharray:6,3;opacity:.5}
 .at-empty{padding:40px;text-align:center;color:var(--muted);font-size:13px}
 
 /* ═══ NOTES ═══ */
@@ -379,7 +390,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
         </div>
       </div>
       <!-- KANBAN --><div class="kb-w" id="v-kb"><div class="kb-c"><div class="kb-ch" style="border-top:2px solid #9CA3AF"><span>📋 未着手</span><span class="kb-cc" id="kbc-n">0</span></div><div class="kb-cb" id="kbb-n"></div></div><div class="kb-c"><div class="kb-ch" style="border-top:2px solid var(--blue)"><span>✍️ 執筆中</span><span class="kb-cc" id="kbc-w">0</span></div><div class="kb-cb" id="kbb-w"></div></div><div class="kb-c"><div class="kb-ch" style="border-top:2px solid var(--yellow)"><span>👀 確認待ち</span><span class="kb-cc" id="kbc-r">0</span></div><div class="kb-cb" id="kbb-r"></div></div><div class="kb-c"><div class="kb-ch" style="border-top:2px solid var(--purple)"><span>📅 公開待ち</span><span class="kb-cc" id="kbc-wt">0</span></div><div class="kb-cb" id="kbb-wt"></div></div><div class="kb-c"><div class="kb-ch" style="border-top:2px solid var(--green)"><span>🚀 公開済み</span><span class="kb-cc" id="kbc-p">0</span></div><div class="kb-cb" id="kbb-p"></div></div></div>
-      <!-- ANALYTICS --><div class="an-w" id="v-an"><div class="mt" id="month-tabs"></div><div id="an-ms"></div><div class="sh"><div class="sh-t">📊 記事パフォーマンス<span class="sh-h">数値クリックで直接入力</span></div><button class="btn btn-sm" onclick="syncNewAnalytics()">📥 未登録の記事をスプシに追加</button></div><div class="at-w"><table class="at"><thead><tr><th>掲載日</th><th>記事タイトル</th><th style="text-align:right">セッション<br><span style="font-weight:400;opacity:.6">〜1週</span></th><th style="text-align:right">セッション<br><span style="font-weight:400;opacity:.6">〜1月</span></th><th style="text-align:right">エンゲージ<br><span style="font-weight:400;opacity:.6">〜1週</span></th><th style="text-align:right">エンゲージ<br><span style="font-weight:400;opacity:.6">〜1月</span></th><th style="text-align:right">回遊率<br><span style="font-weight:400;opacity:.6">〜1週</span></th><th style="text-align:right">回遊率<br><span style="font-weight:400;opacity:.6">〜1月</span></th></tr></thead><tbody id="a-tb"></tbody></table></div></div>
+      <!-- ANALYTICS --><div class="an-w" id="v-an"><div class="mt" id="month-tabs"></div><div id="an-ms"></div><div class="sh"><div class="sh-t">📊 記事パフォーマンス<span class="sh-h">数値クリックで直接入力</span></div><button class="btn btn-sm" onclick="syncNewAnalytics()">📥 未登録の記事をスプシに追加</button></div><div class="at-w"><table class="at"><thead><tr><th>掲載日</th><th>記事タイトル</th><th style="text-align:right">セッション<br><span style="font-weight:400;opacity:.6">〜1週</span></th><th style="text-align:right">セッション<br><span style="font-weight:400;opacity:.6">〜1月</span></th><th style="text-align:right">エンゲージ<br><span style="font-weight:400;opacity:.6">〜1週</span></th><th style="text-align:right">エンゲージ<br><span style="font-weight:400;opacity:.6">〜1月</span></th><th style="text-align:right">回遊率<br><span style="font-weight:400;opacity:.6">〜1週</span></th><th style="text-align:right">回遊率<br><span style="font-weight:400;opacity:.6">〜1月</span></th></tr></thead><tbody id="a-tb"></tbody></table></div><div id="an-charts" style="margin-top:24px"></div></div>
       <!-- GANTT -->
       <div class="gantt-w" id="v-gantt">
         <div class="gantt-toolbar">
@@ -956,10 +967,10 @@ function renderSchedCard(a,inSlot){
 function renderKb(){const cols={'未着手':{b:'kbb-n',c:'kbc-n',i:[]},'執筆中':{b:'kbb-w',c:'kbc-w',i:[]},'確認待ち':{b:'kbb-r',c:'kbc-r',i:[]},'公開待ち':{b:'kbb-wt',c:'kbc-wt',i:[]},'公開済み':{b:'kbb-p',c:'kbc-p',i:[]}};let fl=cFilter==='all'?articles:articles.filter(a=>a.as===cFilter);fl.forEach(a=>{if(cols[a.st])cols[a.st].i.push(a)});Object.entries(cols).forEach(([st,col])=>{document.getElementById(col.c).textContent=col.i.length;document.getElementById(col.b).innerHTML=col.i.map(a=>{const days=du(a.pd);let dc='var(--muted)';if(st!=='公開済み'){if(days<=0)dc='var(--red)';else if(days<=3)dc='var(--yellow)'}return`<div class="kb-cd" onclick="openEdit(${a.id})"><div class="kb-ct">${a.ti}</div><div class="kb-cm"><div style="display:flex;align-items:center;gap:6px;font-size:11px">${a.as?`<div class="av ${avC(a.as)}" style="width:18px;height:18px;font-size:9px">${a.as[0]}</div>${a.as}`:''}</div><div class="kb-cdt" style="color:${dc}">公開 ${fD(a.pd)}</div></div><div class="kb-cn">🔔 通知 ${fD(a.nd)}</div></div>`}).join('')})}
 
 // ═══ RENDER: ANALYTICS ═══
-function renderAnalytics(){syncAn();const months=Object.keys(monthlyData).sort();if(!months.includes(curMonth)&&months.length)curMonth=months[months.length-1];document.getElementById('month-tabs').innerHTML=months.map(m=>`<button class="mt-t ${m===curMonth?'on':''}" onclick="curMonth='${m}';renderAnalytics()">${monthLabel(m)}</button>`).join('');const md=monthlyData[curMonth];if(!md)return;const arts=md.articles.filter(a=>!a.auto||a.sw!=='—');const avgSw=arts.length?(arts.reduce((s,a)=>s+(typeof a.sw==='number'?a.sw:0),0)/arts.length).toFixed(1):'—';const avgTw=arts.length?(arts.reduce((s,a)=>s+(typeof a.tw==='number'?a.tw:0),0)/arts.length).toFixed(2):'—';
+function renderAnalytics(){syncAn();const months=Object.keys(monthlyData).sort();if(!months.includes(curMonth)&&months.length)curMonth=months[months.length-1];document.getElementById('month-tabs').innerHTML=months.map(m=>`<button class="mt-t ${m===curMonth?'on':''}" onclick="curMonth='${m}';renderAnalytics()">${monthLabel(m)}</button>`).join('');const md=monthlyData[curMonth];if(!md)return;const arts=md.articles.filter(a=>!a.auto||a.sw!=='—');const avgSw=arts.length?(arts.reduce((s,a)=>s+(typeof a.sw==='number'?a.sw:0),0)/arts.length).toFixed(1):'—';const avgTw=arts.length?(arts.reduce((s,a)=>s+(typeof a.tw==='number'?a.tw:0),0)/arts.length).toFixed(2):'—';const smArtsTop=arts.filter(a=>typeof a.sm==='number');const avgSm=smArtsTop.length?(smArtsTop.reduce((s,a)=>s+a.sm,0)/smArtsTop.length).toFixed(1):'—';
   const ewArts=md.articles.filter(a=>a.ew&&a.ew!=='—');
   let avgEw='—';
-  if(ewArts.length){const totalSec=ewArts.reduce((s,a)=>{const p=String(a.ew).split(':');return s+parseInt(p[0]||0)*60+parseInt(p[1]||0)},0);const avg=Math.round(totalSec/ewArts.length);const mm=Math.floor(avg/60),ss=avg%60;avgEw=mm+':'+String(ss).padStart(2,'0')};document.getElementById('an-ms').innerHTML=`<div class="ms-card" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr"><div class="ms-item"><div class="ms-label">月間セッション</div><div class="ms-val"><div class="ms-edit" onclick="startSummaryEdit(this,'${curMonth}','sessions')">${md.sessions!==null?md.sessions.toLocaleString():'<span style="color:var(--muted);font-size:14px">クリックで入力</span>'}</div></div></div><div class="ms-item"><div class="ms-label">Direct流入率</div><div class="ms-val"><div class="ms-edit" onclick="startSummaryEdit(this,'${curMonth}','direct')">${md.direct!==null&&md.direct!==undefined?md.direct+'%':'<span style="color:var(--muted);font-size:14px">クリックで入力</span>'}</div></div></div><div class="ms-item"><div class="ms-label">記事数</div><div class="ms-val">${md.articles.length}<span class="ms-target">本</span></div></div><div class="ms-item"><div class="ms-label">平均エンゲージ（1週）</div><div class="ms-val">${avgEw}<span class="ms-target"></span></div>${avgEw!=='—'?`<div class="ms-bar"><div class="ms-bf" style="width:${Math.min(eM(avgEw)/90*100,100)}%;background:${eM(avgEw)>=40?'var(--green)':eM(avgEw)>=20?'var(--yellow)':'var(--red)'}"></div></div>`:''}</div><div class="ms-item"><div class="ms-label">平均回遊率（1週）</div><div class="ms-val">${avgTw}<span class="ms-target">/ 1.5</span></div>${avgTw!=='—'?`<div class="ms-bar"><div class="ms-bf" style="width:${Math.min(avgTw/1.5*100,100)}%;background:${avgTw>=1.5?'var(--green)':avgTw>=1.05?'var(--yellow)':'var(--red)'}"></div></div>`:''}</div></div>`;const TG={sw:100,sm:500,ew:40,tw:1.5};const tb=document.getElementById('a-tb');if(!md.articles.length){tb.innerHTML='<tr><td colspan="8" class="at-empty">この月にはまだ記事がありません</td></tr>';return}tb.innerHTML=md.articles.map((a,i)=>{function ec(f){const v=a[f];return`<td class="n ${v!=='—'?gCl(v,f):''}"><div class="ec" onclick="startEdit(this,'${curMonth}',${i},'${f}')">${v}</div></td>`}return`<tr><td class="n">${a.date}</td><td class="tc">${a.ti}${a.auto?'<span class="an-nb">New</span>':''}</td>${ec('sw')}${ec('sm')}${ec('ew')}${ec('em')}${ec('tw')}${ec('tm')}</tr>`}).join('')}
+  if(ewArts.length){const totalSec=ewArts.reduce((s,a)=>{const p=String(a.ew).split(':');return s+parseInt(p[0]||0)*60+parseInt(p[1]||0)},0);const avg=Math.round(totalSec/ewArts.length);const mm=Math.floor(avg/60),ss=avg%60;avgEw=mm+':'+String(ss).padStart(2,'0')};document.getElementById('an-ms').innerHTML=`<div class="ms-card" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr 1fr"><div class="ms-item"><div class="ms-label">月間セッション</div><div class="ms-val"><div class="ms-edit" onclick="startSummaryEdit(this,'${curMonth}','sessions')">${md.sessions!==null?md.sessions.toLocaleString():'<span style="color:var(--muted);font-size:14px">クリックで入力</span>'}</div></div></div><div class="ms-item"><div class="ms-label">Direct流入率</div><div class="ms-val"><div class="ms-edit" onclick="startSummaryEdit(this,'${curMonth}','direct')">${md.direct!==null&&md.direct!==undefined?md.direct+'%':'<span style="color:var(--muted);font-size:14px">クリックで入力</span>'}</div></div></div><div class="ms-item"><div class="ms-label">記事数</div><div class="ms-val">${md.articles.length}<span class="ms-target">本</span></div></div><div class="ms-item"><div class="ms-label">平均セッション（1週）</div><div class="ms-val">${avgSw}</div>${avgSw!=='—'?`<div class="ms-bar"><div class="ms-bf" style="width:${Math.min(avgSw/100*100,100)}%;background:${avgSw>=100?'var(--green)':avgSw>=60?'var(--yellow)':'var(--red)'}"></div></div>`:''}</div><div class="ms-item"><div class="ms-label">平均エンゲージ（1週）</div><div class="ms-val">${avgEw}</div>${avgEw!=='—'?`<div class="ms-bar"><div class="ms-bf" style="width:${Math.min(eM(avgEw)/40*100,100)}%;background:${eM(avgEw)>=40?'var(--green)':eM(avgEw)>=20?'var(--yellow)':'var(--red)'}"></div></div>`:''}</div><div class="ms-item"><div class="ms-label">平均回遊率（1週）</div><div class="ms-val">${avgTw}<span class="ms-target">/ 1.5</span></div>${avgTw!=='—'?`<div class="ms-bar"><div class="ms-bf" style="width:${Math.min(avgTw/1.5*100,100)}%;background:${avgTw>=1.5?'var(--green)':avgTw>=1.05?'var(--yellow)':'var(--red)'}"></div></div>`:''}</div><div class="ms-item"><div class="ms-label">平均セッション（1月）</div><div class="ms-val">${avgSm}</div></div></div>`;const TG={sw:100,sm:500,ew:40,tw:1.5};const tb=document.getElementById('a-tb');if(!md.articles.length){tb.innerHTML='<tr><td colspan="8" class="at-empty">この月にはまだ記事がありません</td></tr>';return}tb.innerHTML=md.articles.map((a,i)=>{function ec(f){const v=a[f];return`<td class="n ${v!=='—'?gCl(v,f):''}"><div class="ec" onclick="startEdit(this,'${curMonth}',${i},'${f}')">${v}</div></td>`}return`<tr><td class="n">${a.date}</td><td class="tc">${a.ti}${a.auto?'<span class="an-nb">New</span>':''}</td>${ec('sw')}${ec('sm')}${ec('ew')}${ec('em')}${ec('tw')}${ec('tm')}</tr>`}).join('');}
 
 // ═══ RENDER: GANTT ═══
 function renderGantt(){
@@ -1177,6 +1188,51 @@ function updateKPIs(){
   }else{document.getElementById('k-nav').textContent='—';setBar('k-nav-bar',0,'')}
 }
 
+function renderCharts(){
+  var months=Object.keys(monthlyData).sort();
+  if(months.length<2){document.getElementById('an-charts').innerHTML='';return}
+  var last8=months.slice(-8);
+  function getAvg(mk,f){var md=monthlyData[mk];if(!md)return null;var a=md.articles.filter(function(x){return typeof x[f]==='number'});if(!a.length)return null;return a.reduce(function(s,x){return s+x[f]},0)/a.length}
+  function getAvgT(mk,f){var md=monthlyData[mk];if(!md)return null;var a=md.articles.filter(function(x){return x[f]&&x[f]!=='\u2014'});if(!a.length)return null;var t=a.reduce(function(s,x){var p=String(x[f]).split(':');return s+parseInt(p[0]||0)*60+parseInt(p[1]||0)},0);return t/a.length}
+  function chart(label,data,target,unit,color,isTime){
+    var W=340,H=140,PL=35,PR=10,PT=22,PB=28,cW=W-PL-PR,cH=H-PT-PB;
+    var vals=data.map(function(d){return d.v}).filter(function(v){return v!==null});
+    if(!vals.length)return'<div class="chart-box"><div class="chart-title">'+label+'</div><div style="color:var(--muted);font-size:11px;padding:20px 0;text-align:center">\u30c7\u30fc\u30bf\u306a\u3057</div></div>';
+    var mx=Math.max.apply(null,vals.concat([target||0]))*1.2||100;
+    function xi(i){return PL+i*(cW/Math.max(data.length-1,1))}
+    function yi(v){return PT+cH-v/mx*cH}
+    var gl='';for(var g=0;g<=3;g++){var gv=mx/3*g;gl+='<line x1="'+PL+'" y1="'+yi(gv)+'" x2="'+(W-PR)+'" y2="'+yi(gv)+'" class="chart-grid-line"/>';}
+    var tl=target?'<line x1="'+PL+'" y1="'+yi(target)+'" x2="'+(W-PR)+'" y2="'+yi(target)+'" class="chart-target-line"/>':'';
+    var pts=[],dots='',vls='',xl='';
+    data.forEach(function(d,i){
+      xl+='<text x="'+xi(i)+'" y="'+(H-5)+'" class="chart-label">'+d.label+'</text>';
+      if(d.v!==null){
+        pts.push(xi(i)+','+yi(d.v));
+        var dv=isTime?Math.floor(d.v/60)+':'+String(Math.round(d.v%60)).padStart(2,'0'):d.v.toFixed(1);
+        dots+='<circle cx="'+xi(i)+'" cy="'+yi(d.v)+'" r="3.5" class="chart-dot" fill="'+color+'"><title>'+d.label+': '+dv+(unit||'')+'</title></circle>';
+        vls+='<text x="'+xi(i)+'" y="'+(yi(d.v)-8)+'" class="chart-val">'+dv+'</text>';
+      }
+    });
+    var ln=pts.length>1?'<polyline points="'+pts.join(' ')+'" class="chart-line" stroke="'+color+'"/>':'';
+    var ar='';
+    if(pts.length>1){var fi=data.findIndex(function(d){return d.v!==null});var li=data.length-1;for(;li>=0;li--)if(data[li].v!==null)break;ar='<polygon points="'+xi(fi)+','+yi(0)+' '+pts.join(' ')+' '+xi(li)+','+yi(0)+'" fill="'+color+'" opacity="0.06"/>';}
+    return'<div class="chart-box"><div class="chart-title">'+label+'</div><svg class="chart-svg" viewBox="0 0 '+W+' '+H+'">'+gl+tl+ar+ln+dots+vls+xl+'</svg></div>';
+  }
+  var sd=last8.map(function(mk){return{label:parseInt(mk.split('-')[1])+'\u6708',v:monthlyData[mk].sessions}});
+  var dd=last8.map(function(mk){return{label:parseInt(mk.split('-')[1])+'\u6708',v:monthlyData[mk].direct}});
+  var swd=last8.map(function(mk){return{label:parseInt(mk.split('-')[1])+'\u6708',v:getAvg(mk,'sw')}});
+  var ewd=last8.map(function(mk){return{label:parseInt(mk.split('-')[1])+'\u6708',v:getAvgT(mk,'ew')}});
+  var twd=last8.map(function(mk){return{label:parseInt(mk.split('-')[1])+'\u6708',v:getAvg(mk,'tw')}});
+  document.getElementById('an-charts').innerHTML='<div class="chart-grid">'
+    +chart('\u6708\u9593\u30bb\u30c3\u30b7\u30e7\u30f3',sd,30000,'','var(--green)',false)
+    +chart('Direct\u6d41\u5165\u7387',dd,20,'%','var(--blue)',false)
+    +chart('\u5e73\u5747\u30bb\u30c3\u30b7\u30e7\u30f3\uff081\u9031\uff09',swd,100,'','var(--orange)',false)
+    +chart('\u5e73\u5747\u30a8\u30f3\u30b2\u30fc\u30b8\uff081\u9031\uff09',ewd,40,'','var(--purple)',true)
+    +chart('\u5e73\u5747\u56de\u904a\u7387\uff081\u9031\uff09',twd,1.5,'','var(--teal)',false)
+    
+    +'</div>';
+}
+
 function renderPhotoKb(){
   ['Geoff','Boris'].forEach(function(name){
     var mine=articles.filter(function(a){return(a.photo||'').includes(name)});
@@ -1224,7 +1280,7 @@ function renderPhotoKb(){
   });
 }
 
-function renderAll(){renderSched();renderKb();renderPhotoKb();renderAnalytics();renderGantt();renderNotes();updateKPIs()}
+function renderAll(){renderSched();renderKb();renderPhotoKb();renderAnalytics();renderCharts();renderGantt();renderNotes();updateKPIs()}
 
 // ═══ NAV ═══
 function swV(v,el){['plan','dash','kb','pkb','an','gantt','notes'].forEach(k=>{const e=document.getElementById('v-'+k);if(k==='kb')e.className=v===k?'kb-w on':'kb-w';else if(k==='pkb')e.className=v===k?'pkb-w on':'pkb-w';else if(k==='an')e.className=v===k?'an-w on':'an-w';else if(k==='gantt')e.className=v===k?'gantt-w on':'gantt-w';else if(k==='notes')e.className=v===k?'notes-w on':'notes-w';else if(k==='plan')e.className=v===k?'plan-w on':'plan-w';else e.style.display=v===k?'block':'none'});document.getElementById('vt').textContent={plan:'企画会議',dash:'ダッシュボード',kb:'執筆カンバン',pkb:'撮影カンバン',an:'データ分析',gantt:'年間スケジュール',notes:'メモ'}[v];document.querySelectorAll('#nv-m .ni').forEach(n=>n.classList.remove('on'));if(el)el.classList.add('on');if(v==='plan')renderPlanning()}
